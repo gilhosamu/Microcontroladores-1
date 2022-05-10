@@ -1,0 +1,3 @@
+Essa Libraries_Arduino_Proteus tem várias bibliotecas de Arduino, ele fica bonitinho como se fosse de verdade no proteus, só copiar tudo pra cá:
+
+C:\Program Files (x86)\Labcenter Electronics\Proteus 8 Professional\DATA\LIBRARY
