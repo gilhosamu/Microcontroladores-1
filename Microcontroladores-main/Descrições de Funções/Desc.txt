@@ -1,0 +1,6 @@
+DDR - Para definir um pino como saída devemos setar seu respectivo bit do registrador DDR como 1 e  para defini-lo como entrada seta-lo para 0.
+
+PORT - Para definir um pino como alto devemos setar seu respectivo bit do registrador PORT como 1 e para defini-lo como baixo seta-lo para 0.
+
+PIN - Os registradores do tipo PIN são responsáveis por guardar o estado lógico de um pino.
+
