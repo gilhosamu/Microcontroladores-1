@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------- //
-//		AVR e Arduino: Técnicas de Projeto, 2a ed. - 2012.										//	
+//		AVR e Arduino: Tï¿½cnicas de Projeto, 2a ed. - 2012.										//	
 //--------------------------------------------------------------------------------------------- //
 //=============================================================================================	//
 //		Sub-rotinas para o trabalho com um LCD 16x2 com via de dados de 4 bits					//	
@@ -12,7 +12,7 @@
 //---------------------------------------------------------------------------------------------
 // Sub-rotina para enviar caracteres e comandos ao LCD com via de dados de 4 bits
 //---------------------------------------------------------------------------------------------
-void cmd_LCD(unsigned char c, char cd)				//c é o dado  e cd indica se é instrução ou caractere
+void cmd_LCD(unsigned char c, char cd)				//c ï¿½ o dado  e cd indica se ï¿½ instruï¿½ï¿½o ou caractere
 {
 	if(cd==0)
 		clr_bit(CONTR_LCD,RS);
@@ -20,36 +20,36 @@ void cmd_LCD(unsigned char c, char cd)				//c é o dado  e cd indica se é instruç
 		set_bit(CONTR_LCD,RS);
 
 	//primeiro nibble de dados - 4 MSB
-	#if (nibble_dados)								//compila código para os pinos de dados do LCD nos 4 MSB do PORT
+	#if (nibble_dados)								//compila cï¿½digo para os pinos de dados do LCD nos 4 MSB do PORT
 		DADOS_LCD = (DADOS_LCD & 0x0F)|(0xF0 & c);		
-	#else											//compila código para os pinos de dados do LCD nos 4 LSB do PORT
+	#else											//compila cï¿½digo para os pinos de dados do LCD nos 4 LSB do PORT
 		DADOS_LCD = (DADOS_LCD & 0xF0)|(c>>4);	
 	#endif
 	
 	pulso_enable();
 
 	//segundo nibble de dados - 4 LSB
-	#if (nibble_dados)								//compila código para os pinos de dados do LCD nos 4 MSB do PORT
+	#if (nibble_dados)								//compila cï¿½digo para os pinos de dados do LCD nos 4 MSB do PORT
 		DADOS_LCD = (DADOS_LCD & 0x0F) | (0xF0 & (c<<4));		
-	#else											//compila código para os pinos de dados do LCD nos 4 LSB do PORT
+	#else											//compila cï¿½digo para os pinos de dados do LCD nos 4 LSB do PORT
 		DADOS_LCD = (DADOS_LCD & 0xF0) | (0x0F & c);
 	#endif
 	
 	pulso_enable();
 	
-	if((cd==0) && (c<4))				//se for instrução de retorno ou limpeza espera LCD estar pronto
+	if((cd==0) && (c<4))				//se for instruï¿½ï¿½o de retorno ou limpeza espera LCD estar pronto
 		_delay_ms(2);
 }
 //---------------------------------------------------------------------------------------------
-//Sub-rotina para inicialização do LCD com via de dados de 4 bits
+//Sub-rotina para inicializaï¿½ï¿½o do LCD com via de dados de 4 bits
 //---------------------------------------------------------------------------------------------
-void inic_LCD_4bits()		//sequência ditada pelo fabricando do circuito integrado HD44780
-{							//o LCD será só escrito. Então, R/W é sempre zero.
+void inic_LCD_4bits()		//sequï¿½ncia ditada pelo fabricando do circuito integrado HD44780
+{							//o LCD serï¿½ sï¿½ escrito. Entï¿½o, R/W ï¿½ sempre zero.
 
-	clr_bit(CONTR_LCD,RS);	//RS em zero indicando que o dado para o LCD será uma instrução	
-	clr_bit(CONTR_LCD,E);	//pino de habilitação em zero
+	clr_bit(CONTR_LCD,RS);	//RS em zero indicando que o dado para o LCD serï¿½ uma instruï¿½ï¿½o	
+	clr_bit(CONTR_LCD,E);	//pino de habilitaï¿½ï¿½o em zero
 	
-	_delay_ms(20);	 		//tempo para estabilizar a tensão do LCD, após VCC ultrapassar 4.5 V (na prática pode
+	_delay_ms(20);	 		//tempo para estabilizar a tensï¿½o do LCD, apï¿½s VCC ultrapassar 4.5 V (na prï¿½tica pode
 							//ser maior). 
 	//interface de 8 bits						
 	#if (nibble_dados)
@@ -58,16 +58,16 @@ void inic_LCD_4bits()		//sequência ditada pelo fabricando do circuito integrado 
 		DADOS_LCD = (DADOS_LCD & 0xF0) | 0x03;		
 	#endif						
 							
-	pulso_enable();			//habilitação respeitando os tempos de resposta do LCD
+	pulso_enable();			//habilitaï¿½ï¿½o respeitando os tempos de resposta do LCD
 	_delay_ms(5);		
 	pulso_enable();
 	_delay_us(200);
-	pulso_enable();	/*até aqui ainda é uma interface de 8 bits.
+	pulso_enable();	/*atï¿½ aqui ainda ï¿½ uma interface de 8 bits.
 					Muitos programadores desprezam os comandos acima, respeitando apenas o tempo de
-					estabilização da tensão (geralmente funciona). Se o LCD não for inicializado primeiro no 
-					modo de 8 bits, haverá problemas se o microcontrolador for inicializado e o display já o tiver sido.*/
+					estabilizaï¿½ï¿½o da tensï¿½o (geralmente funciona). Se o LCD nï¿½o for inicializado primeiro no 
+					modo de 8 bits, haverï¿½ problemas se o microcontrolador for inicializado e o display jï¿½ o tiver sido.*/
 	
-	//interface de 4 bits, deve ser enviado duas vezes (a outra está abaixo)
+	//interface de 4 bits, deve ser enviado duas vezes (a outra estï¿½ abaixo)
 	#if (nibble_dados) 
 		DADOS_LCD = (DADOS_LCD & 0x0F) | 0x20;		
 	#else		
@@ -76,11 +76,11 @@ void inic_LCD_4bits()		//sequência ditada pelo fabricando do circuito integrado 
 	
 	pulso_enable();		
    	cmd_LCD(0x28,0); 		//interface de 4 bits 2 linhas (aqui se habilita as 2 linhas) 
-							//são enviados os 2 nibbles (0x2 e 0x8)
+							//sï¿½o enviados os 2 nibbles (0x2 e 0x8)
    	cmd_LCD(0x08,0);		//desliga o display
    	cmd_LCD(0x01,0);		//limpa todo o display
-   	cmd_LCD(0x0C,0);		//mensagem aparente cursor inativo não piscando   
-   	cmd_LCD(0x80,0);		//inicializa cursor na primeira posição a esquerda - 1a linha
+   	cmd_LCD(0x0C,0);		//mensagem aparente cursor inativo nï¿½o piscando   
+   	cmd_LCD(0x80,0);		//inicializa cursor na primeira posiï¿½ï¿½o a esquerda - 1a linha
 }
 //---------------------------------------------------------------------------------------------
 //Sub-rotina de escrita no LCD -  dados armazenados na RAM
@@ -97,7 +97,7 @@ void escreve_LCD_Flash(const char *c)
    for (;pgm_read_byte(&(*c))!=0;c++) cmd_LCD(pgm_read_byte(&(*c)),1);
 }
 //---------------------------------------------------------------------------------------------
-//Conversão de um número em seus digitos individuais
+//Conversï¿½o de um nï¿½mero em seus digitos individuais
 //---------------------------------------------------------------------------------------------
 void ident_num(unsigned int valor, unsigned char *disp)
 {
@@ -109,9 +109,36 @@ void ident_num(unsigned int valor, unsigned char *disp)
 	do
 	{
 		*disp = (valor%10) + conv_ascii;	//pega o resto da divisao por 10
-		valor /=10;						//pega o inteiro da divisão por 10
+		valor /=10;						//pega o inteiro da divisï¿½o por 10
 		disp++;
 
 	}while (valor!=0);
 }
 //---------------------------------------------------------------------------------------------
+void desenha_LCD(char a){
+  cmd_LCD(a, 1);
+}
+//---------------------------------------------------------------------------------------------
+void set_cursor(char a){
+  cmd_LCD(a, 0);
+}
+//---------------------------------------------------------------------------------------------
+void save_carac(char a[], int b){
+  set_cursor(0x40+(b*8));
+  for(int k=0;k<=7;k++){
+    desenha_LCD(a[k]);
+  }
+}
+//---------------------------------------------------------------------------------------------
+void clear_LCD(){
+  cmd_LCD(1, 0);
+}
+//---------------------------------------------------------------------------------------------
+void swap(int *a, int *b)
+{
+   int t;
+
+   t  = *b;
+   *b = *a;
+   *a = t;
+}

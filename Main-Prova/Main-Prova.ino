@@ -1,54 +1,160 @@
-#include "LCD.h" 
+#include "LCD.h"
 #include "def_principais.h"
-#include "LCD.c" 
+#include "LCD.c"
 
- 
-unsigned char POU[] = {
-  0x04,
-  0x0E,
-  0x15,
+
+unsigned char nave[] = {
+  0x00,
+  0x10,
+  0x1E,
   0x1F,
-  0x0E,
-  0x1F,
-  0x0A,
+  0x1E,
+  0x10,
+  0x00,
   0x00
 };
 
-int main(){
+unsigned char nave_invertida[] = {
+  B00000,
+  B00001,
+  B01111,
+  B11111,
+  B01111,
+  B00001,
+  B00000,
+  B00000
+};
 
-    unsigned char k = 0;
-    
+char pos[] = {0x80, 0x81, 0x82, 0xC0, 0xC1, 0xC2};
+char pos_f[] = {0xC1, 0x80, 0xC0, 0x82, 0xC2, 0x81};
 
-    DDRD = 0xFF;
-    DDRB = 0xFF;
-    PORTB = 0x00;
-    
-    set_bit(PORTB, 2);
-    inic_LCD_4bits();
+int main() {
 
-    cmd_LCD(0x40, 0);
-    for (k=0;k<=7; k++){
-    cmd_LCD(POU[k],1);
-    
-    }
-    
-    for(int i=0;i<=16;i++){
-    cmd_LCD(0xC0+i, 0);
-    cmd_LCD(0xFF, 1);
-    }
+  int k = 0;
+  int j = 0;
+  int i;
 
-    for(int i=0;i<=16;i++){
-    cmd_LCD(0x80+i/2, 0);
-    cmd_LCD(0b00101110,1);
-    }
+  char b[] = {};
   
-    cmd_LCD(0x80, 0);
-    cmd_LCD(0x00, 1);
+  DDRD = 0xFF;
+  DDRB = 0xFF;
+  PORTB = 0x00;
+  DDRC = 0x00;
+  PORTC = 0xFF;
+
+  set_bit(PORTB, 2);
+  inic_LCD_4bits();
+
+  save_carac(nave, 0);
+  save_carac(nave_invertida, 1);
+  
+  paint();
+  _delay_ms(1000);
+  clear_LCD();
+  paint_f();
+
+  while (1){
+    
+    if (!tst_bit(PINC, 0)){
+      while(!tst_bit(PINC, 0));
+      _delay_ms(20);
+      k++;
+      if (k > 5){
+        k = 0;
+      }
+    }
+    
+    if(j==0){
+      if(!tst_bit(PINC, 1)){
+      while(!tst_bit(PINC, 0));
+      _delay_ms(20);
+        i = k;
+        j++;
+      }
+    }
+    
+    if(j==1){
+      if(!tst_bit(PINC, 1)){
+      while(!tst_bit(PINC, 0));
+      _delay_ms(20);
+                   
+         char t;
+         t = pos_f[i];
+         pos_f[i] = pos_f[k];
+         pos_f[k] = t;
+
+         set_cursor(pos_f[2]);
+         desenha_LCD(0x00);
+        
+         set_cursor(pos_f[1]);
+         desenha_LCD(0b00111101);
+        
+         set_cursor(pos_f[0]);
+         desenha_LCD(0b00101101);
+        
+         set_cursor(pos_f[3]);
+         desenha_LCD(0x09);
+        
+         set_cursor(pos_f[4]);
+         desenha_LCD(0b00111101);
+        
+         set_cursor(pos_f[5]);
+         desenha_LCD(0b00101101);
+
+         j = 0;
+      
+         
+     }
+    }
+
+    set_cursor(pos[k]);
+    cmd_LCD(0x0F, 0);
+
+   }  
+  }
+  
+
+void paint() {
+
+  set_cursor(pos[2]);
+  desenha_LCD(0x00);
+
+  set_cursor(pos[1]);
+  desenha_LCD(0b00111101);
+
+  set_cursor(pos[0]);
+  desenha_LCD(0b00101101);
+
+  set_cursor(pos[3]);
+  desenha_LCD(0x09);
+
+  set_cursor(pos[4]);
+  desenha_LCD(0b00111101);
+
+  set_cursor(pos[5]);
+  desenha_LCD(0b00101101);
+
+  
 }
-       
-    
-    
-    
 
+void paint_f(){
+  
+  set_cursor(pos_f[2]);
+  desenha_LCD(0x00);
 
-    
+  set_cursor(pos_f[1]);
+  desenha_LCD(0b00111101);
+
+  set_cursor(pos_f[0]);
+  desenha_LCD(0b00101101);
+
+  set_cursor(pos_f[3]);
+  desenha_LCD(0x09);
+
+  set_cursor(pos_f[4]);
+  desenha_LCD(0b00111101);
+
+  set_cursor(pos_f[5]);
+  desenha_LCD(0b00101101);
+
+}
